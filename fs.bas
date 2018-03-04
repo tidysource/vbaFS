@@ -417,6 +417,53 @@ Option Explicit
         readFile = txtStream.readAll
     End Function
 
+    'Parse a CSV string
+    '------------------
+    Private Function parseCSV( _
+                    str As String, _
+                    delimit As Variant _
+                    ) As Variant
+        'Clean the string input
+            str = normalizeNewLines(str, "\n")
+            'Remove leading and trailing linebreaks
+            str = trimStr(str, "\n")
+            'Remove empty lines
+            str = singleStr(str, "\n")
+
+        'Handle multiple delimiters
+            If IsArray(delimit) Then
+                Dim d As String
+                d = delimit(LBound(delimit))
+                Dim i As Integer
+                For i = LBound(delimit) To UBound(delimit)
+                    str = Replace(str, delimit(i), d)
+                Next i
+                delimit = d
+            End If
+
+        'Interpret input string as CSV
+            Dim lines As Variant
+            lines = Split(str, "\n")
+
+            Dim result As Variant
+            ReDim result(UBound(lines) - LBound(lines)) As Variant
+            Dim j As Long
+            For i = LBound(lines) To UBound(lines)
+                result(i) = Split(lines(i), delimit)
+                'Remove enclosing ""
+                For j = LBound(result(i)) To UBound(result(i))
+                   result(i)(j) = trimStr(CStr(result(i)(j)), """")
+                Next j
+            Next i
+
+        parseCSV = result
+    End Function
+    Function readCSV(filePath As String, delimiter As Variant) As Variant
+        Dim CSV As String
+        CSV = readFile(filePath)
+
+        readCSV = parseCSV(CSV, delimiter)
+    End Function
 
     'Read fixed column width file
     '----------------------------
