@@ -1,4 +1,4 @@
-Attribute VB_Name = "fs_"
+Attribute VB_Name = "VBA_require_fs"
 Option Explicit
 
 'Path helpers
