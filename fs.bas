@@ -458,6 +458,9 @@ Option Explicit
 
         parseCSV = result
     End Function
+
+    'Read CSV into a 2d array
+    '------------------------
     Function readCSV(filePath As String, delimiter As Variant) As Variant
         Dim CSV As String
         CSV = readFile(filePath)
